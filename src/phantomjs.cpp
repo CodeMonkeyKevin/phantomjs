@@ -197,6 +197,7 @@ Phantom::Phantom(QObject *parent)
 
     bool autoLoadImages = true;
     bool pluginsEnabled = false;
+    bool xhrsEnabled = true;
 
     // second argument: script name
     QStringList args = QApplication::arguments();
@@ -230,6 +231,14 @@ Phantom::Phantom(QObject *parent)
         }
         if (arg == "--load-plugins=no") {
             pluginsEnabled = false;
+            continue;
+        }
+        if (arg == "--allow-xhrs=yes") {
+            xhrsEnabled = true;
+            continue;
+        }
+        if (arg == "--allow-xhrs=no") {
+            xhrsEnabled = false;
             continue;
         }
         if (arg.startsWith("--proxy=")) {
@@ -277,6 +286,7 @@ Phantom::Phantom(QObject *parent)
 
     m_page.settings()->setAttribute(QWebSettings::AutoLoadImages, autoLoadImages);
     m_page.settings()->setAttribute(QWebSettings::PluginsEnabled, pluginsEnabled);
+    m_page.settings()->setAttribute(QWebSettings::LocalContentCanAccessRemoteUrls, xhrsEnabled);
 
     m_page.settings()->setAttribute(QWebSettings::OfflineStorageDatabaseEnabled, true);
     m_page.settings()->setOfflineStoragePath(QDesktopServices::storageLocation(QDesktopServices::DataLocation));
